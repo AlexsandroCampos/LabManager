@@ -40,5 +40,11 @@ if (modelName == "Computer")
         computerRepository.Delete(Convert.ToInt32(args[2]));
         Console.WriteLine("Completed computer deletion.");
     }
+    if (modelAction == "Update")
+    {
+        var computer = computerRepository.Update(new Computer(Convert.ToInt32(args[2]), args[3], args[4]));
+        Console.WriteLine("Updated computer: {0}, {1}, {2}", computer.Id, computer.Ram, computer.Processor);
+    }
+
 }
 
