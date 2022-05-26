@@ -10,7 +10,6 @@ class DatabaseSetup
     {
         _databaseConfig = databaseConfig;
         CreateComputerTable();
-        CreateLabTable();
     }
 
     private void CreateComputerTable() 
