@@ -28,5 +28,11 @@ if (modelName == "Computer")
     {
         computerRepository.Save(new Computer(Convert.ToInt32(args[2]), args[3], args[4]));
     }
+
+    if(modelAction == "Show")
+    {
+        var computer = computerRepository.Show(Convert.ToInt32(args[2]));
+        Console.WriteLine("{0}, {1}, {2}", computer.Id, computer.Ram, computer.Processor);
+    }
 }
 
