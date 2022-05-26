@@ -50,7 +50,7 @@ class ComputerRepository
         connection.Close();
     }
 
-    public Computer Show(int id)
+    public Computer GetById(int id)
     {
         var connection = new SqliteConnection(_databaseConfig.ConnectionString);
         connection.Open();

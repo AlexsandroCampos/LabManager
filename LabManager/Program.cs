@@ -31,7 +31,7 @@ if (modelName == "Computer")
 
     if(modelAction == "Show")
     {
-        var computer = computerRepository.Show(Convert.ToInt32(args[2]));
+        var computer = computerRepository.GetById(Convert.ToInt32(args[2]));
         Console.WriteLine("{0}, {1}, {2}", computer.Id, computer.Ram, computer.Processor);
     }
 }
