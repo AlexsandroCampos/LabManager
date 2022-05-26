@@ -49,4 +49,23 @@ class ComputerRepository
 
         connection.Close();
     }
+
+    public Computer Show(int id)
+    {
+        var connection = new SqliteConnection(_databaseConfig.ConnectionString);
+        connection.Open();
+
+        var command = connection.CreateCommand();
+        command.CommandText = "SELECT * FROM Computers WHERE id = $id;";
+        command.Parameters.AddWithValue("$id", id);
+
+        var reader = command.ExecuteReader();
+        reader.Read();
+        var computer = new Computer( reader.GetInt32(0), reader.GetString(1), reader.GetString(2));
+
+        reader.Close();
+        connection.Close(); 
+
+        return computer;
+    }
 }
