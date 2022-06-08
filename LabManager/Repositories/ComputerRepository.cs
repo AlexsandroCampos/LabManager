@@ -25,7 +25,7 @@ class ComputerRepository
 
         while (reader.Read())
         {
-           var computer = new Computer( reader.GetInt32(0), reader.GetString(1), reader.GetString(2));
+           var computer = ReaderToComputer(reader);
            computers.Add(computer);
         }
 
@@ -61,7 +61,7 @@ class ComputerRepository
 
         var reader = command.ExecuteReader();
         reader.Read();
-        var computer = new Computer( reader.GetInt32(0), reader.GetString(1), reader.GetString(2));
+        var computer = ReaderToComputer(reader);
 
         reader.Close();
         connection.Close(); 
@@ -96,5 +96,10 @@ class ComputerRepository
         connection.Close();
 
         return this.GetById(computer.Id);
+    }
+
+    private Computer ReaderToComputer(SqliteDataReader reader) 
+    {
+        return new Computer( reader.GetInt32(0), reader.GetString(1), reader.GetString(2));
     }
 }
