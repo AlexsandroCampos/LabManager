@@ -31,17 +31,28 @@ if (modelName == "Computer")
 
     if(modelAction == "Show")
     {
-        var computer = computerRepository.GetById(Convert.ToInt32(args[2]));
-        Console.WriteLine("{0}, {1}, {2}", computer.Id, computer.Ram, computer.Processor);
+        var id = Convert.ToInt32(args[2]);
+        if(computerRepository.ExistsById(id)) 
+        {
+            var computer = computerRepository.GetById(id);
+            Console.WriteLine($"{computer.Id}, {computer.Ram}, {computer.Processor}");
+        }
+
+        else {
+            Console.WriteLine($"O computador {id} não existe");
+        }
+        
     }
 
     if(modelAction == "Delete")
     {
+        //if
         computerRepository.Delete(Convert.ToInt32(args[2]));
         Console.WriteLine("Completed computer deletion.");
     }
     if (modelAction == "Update")
     {
+        //update
         var computer = computerRepository.Update(new Computer(Convert.ToInt32(args[2]), args[3], args[4]));
         Console.WriteLine("Updated computer: {0}, {1}, {2}", computer.Id, computer.Ram, computer.Processor);
     }
