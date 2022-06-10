@@ -9,6 +9,8 @@ var databaseSetup = new DatabaseSetup(databaseConfig);
 
 var computerRepository = new ComputerRepository(databaseConfig);
 
+var labRepository = new LabRepository(databaseConfig);
+
 // Routing
 var modelName = args[0];
 var modelAction = args[1];
@@ -20,7 +22,7 @@ if (modelName == "Computer")
     {
            foreach (var computer in computerRepository.GetAll())
            {
-               Console.WriteLine("{0}, {1}, {2}", computer.Id, computer.Ram, computer.Processor);
+               Console.WriteLine($"{ computer.Id}, { computer.Ram}, {computer.Processor}");
            }
 
     }
@@ -54,8 +56,19 @@ if (modelName == "Computer")
     {
         //update
         var computer = computerRepository.Update(new Computer(Convert.ToInt32(args[2]), args[3], args[4]));
-        Console.WriteLine("Updated computer: {0}, {1}, {2}", computer.Id, computer.Ram, computer.Processor);
+        Console.WriteLine($"Updated computer: {computer.Id}, {computer.Ram}, {computer.Processor}");
     }
 
+}
+
+if (modelNam == "Lab")
+{
+    if(modelAction == "List")
+    {
+        foreach (var lab in labRepository.GetAll())
+        {
+            Console.WriteLine($"{ lab.Id}, { lab.Number}, {lab.Name}, {lab.Block}");
+        }
+    }
 }
 

@@ -13,7 +13,7 @@ class LabRepository
         _databaseConfig = databaseConfig;
     }
 
-    public List<Lab> getAll()
+    public List<Lab> GetAll()
     {
         var labs = new List<Lab>(); 
         var connection = new SqliteConnection(_databaseConfig.ConnectionString);
