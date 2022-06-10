@@ -107,6 +107,10 @@ class ComputerRepository
         command.CommandText = "SELECT count(id) FROM Computers WHERE id = $id;";
         command.Parameters.AddWithValue("$id", id);
 
+        // var reader = command.ExecuteReader();
+        // reader.Read();
+        // var result = reader.GetBoolean(0);
+
         var result = Convert.ToBoolean(command.ExecuteScalar());
 
         connection.Close();
