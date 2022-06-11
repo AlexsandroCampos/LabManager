@@ -52,6 +52,19 @@ class LabRepository
         connection.Close();
     }
 
+    public void Delete(int id)
+    {
+         var connection = new SqliteConnection(_databaseConfig.ConnectionString);
+        connection.Open();
+
+        var command = connection.CreateCommand();
+        command.CommandText = "DELETE FROM Labs WHERE id = $id;";
+        command.Parameters.AddWithValue("$id", id);
+        command.ExecuteNonQuery();
+
+        connection.Close();
+    }
+
     private Lab ReaderToLab(SqliteDataReader reader)
     {
         return new Lab(reader.GetInt32(0), reader.GetInt32(1), reader.GetString(2),  reader.GetString(3));
