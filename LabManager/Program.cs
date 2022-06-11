@@ -75,5 +75,11 @@ if (modelName == "Lab")
     {
         labRepository.Save(new Lab(Convert.ToInt32(args[2]), Convert.ToInt32(args[3]), args[4], args[5]));
     }
+
+    if(modelAction == "Delete")
+    {
+        labRepository.Delete(Convert.ToInt32(args[2]));
+        Console.WriteLine("Completed lab deletion.");
+    }
 }
 
