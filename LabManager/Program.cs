@@ -81,5 +81,11 @@ if (modelName == "Lab")
         labRepository.Delete(Convert.ToInt32(args[2]));
         Console.WriteLine("Completed lab deletion.");
     }
+
+    if(modelAction == "Show")
+    {
+        var lab = labRepository.GetById(Convert.ToInt32(args[2]));
+        Console.WriteLine($"{ lab.Id}, { lab.Number}, {lab.Name}, {lab.Block}");
+    }
 }
 
