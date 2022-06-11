@@ -101,6 +101,25 @@ class LabRepository
         return GetById(lab.Id);
     }
 
+    public bool ExistsById(int id) 
+    {
+        var connection = new SqliteConnection(_databaseConfig.ConnectionString);
+        connection.Open();
+
+        var command = connection.CreateCommand();
+        command.CommandText = "SELECT count(id) FROM Lab WHERE id = $id;";
+        command.Parameters.AddWithValue("$id", id);
+
+        // var reader = command.ExecuteReader();
+        // reader.Read();
+        // var result = reader.GetBoolean(0);
+
+        var result = Convert.ToBoolean(command.ExecuteScalar());
+
+        connection.Close();
+        return result;
+    }
+
     private Lab ReaderToLab(SqliteDataReader reader)
     {
         return new Lab(reader.GetInt32(0), reader.GetInt32(1), reader.GetString(2),  reader.GetString(3));
