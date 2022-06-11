@@ -61,7 +61,7 @@ if (modelName == "Computer")
 
 }
 
-if (modelNam == "Lab")
+if (modelName == "Lab")
 {
     if(modelAction == "List")
     {
@@ -69,6 +69,11 @@ if (modelNam == "Lab")
         {
             Console.WriteLine($"{ lab.Id}, { lab.Number}, {lab.Name}, {lab.Block}");
         }
+    }
+
+    if(modelAction == "New")
+    {
+        labRepository.Save(new Lab(Convert.ToInt32(args[2]), Convert.ToInt32(args[3]), args[4], args[5]));
     }
 }
 
