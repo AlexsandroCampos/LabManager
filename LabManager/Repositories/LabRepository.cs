@@ -52,6 +52,25 @@ class LabRepository
         connection.Close();
     }
 
+    public Lab GetById(int id)
+    {
+        var connection = new SqliteConnection(_databaseConfig.ConnectionString);
+        connection.Open();
+
+        var command = connection.CreateCommand();
+        command.CommandText = "SELECT * FROM Labs WHERE id = $id;";
+        command.Parameters.AddWithValue("$id", id);
+
+        var reader = command.ExecuteReader();
+        reader.Read();
+        var lab = ReaderToLab(reader);
+
+        reader.Close();
+        connection.Close(); 
+
+        return lab;
+    }
+
     public void Delete(int id)
     {
          var connection = new SqliteConnection(_databaseConfig.ConnectionString);
@@ -64,6 +83,21 @@ class LabRepository
 
         connection.Close();
     }
+
+    // public Lab Update( Lab lab)
+    // {
+    //     var connection = new SqliteConnection(_databaseConfig.ConnectionString);
+    //     connection.Open();
+
+    //     var command = connection.CreateCommand();
+    //     command.CommandText = "UPDATE Computers SET number = $number, name = $name, block = $block WHERE id = $id;";
+    //      command.Parameters.AddWithValue("$id", lab.Id);
+    //     command.Parameters.AddWithValue("$number", lab.Number);
+    //     command.Parameters.AddWithValue("$name", lab.Name);
+    //     command.Parameters.AddWithValue("$block", lab.Block);
+
+    //     return this.GetById(Lab.Id);
+    // }
 
     private Lab ReaderToLab(SqliteDataReader reader)
     {
