@@ -1,6 +1,7 @@
 using LabManager.Models;
 using Microsoft.Data.Sqlite;
 using LabManager.Database;
+using Dapper;
 
 namespace LabManager.Repositories;
 
@@ -15,113 +16,59 @@ class LabRepository
 
     public List<Lab> GetAll()
     {
-        var labs = new List<Lab>(); 
-        var connection = new SqliteConnection(_databaseConfig.ConnectionString);
+        using var connection = new SqliteConnection(_databaseConfig.ConnectionString);
         connection.Open();
 
-        var command = connection.CreateCommand();
-        command.CommandText = "SELECT * FROM Labs;";
-
-        var reader = command.ExecuteReader();
-
-        while (reader.Read())
-        {
-            var lab = ReaderToLab(reader);
-            labs.Add(lab);
-        }
-
-        reader.Close();
-        connection.Close();
+        var labs = connection.Query<Lab>("SELECT * FROM Labs").ToList();
 
         return labs;
     }
 
     public void Save(Lab lab)
     {
-        var connection = new SqliteConnection(_databaseConfig.ConnectionString);
+        using var connection = new SqliteConnection(_databaseConfig.ConnectionString);
         connection.Open();
 
-        var command = connection.CreateCommand();
-        command.CommandText = "INSERT INTO Labs VALUES($id, $number, $name, $block);";
-        command.Parameters.AddWithValue("$id", lab.Id);
-        command.Parameters.AddWithValue("$number", lab.Number);
-        command.Parameters.AddWithValue("$name", lab.Name);
-        command.Parameters.AddWithValue("$block", lab.Block);
-        command.ExecuteNonQuery();
-
-        connection.Close();
+        connection.Execute("INSERT INTO Labs VALUES(@Id, @Number, @Name, @Block)", lab);
     }
 
     public Lab GetById(int id)
     {
-        var connection = new SqliteConnection(_databaseConfig.ConnectionString);
+        using var connection = new SqliteConnection(_databaseConfig.ConnectionString);
         connection.Open();
 
-        var command = connection.CreateCommand();
-        command.CommandText = "SELECT * FROM Labs WHERE id = $id;";
-        command.Parameters.AddWithValue("$id", id);
-
-        var reader = command.ExecuteReader();
-        reader.Read();
-        var lab = ReaderToLab(reader);
-
-        reader.Close();
-        connection.Close(); 
+        var lab = connection.QuerySingle<Lab>("SELECT * FROM Labs WHERE id = @Id;", new{ Id = id });
 
         return lab;
     }
 
     public void Delete(int id)
     {
-         var connection = new SqliteConnection(_databaseConfig.ConnectionString);
+        using var connection = new SqliteConnection(_databaseConfig.ConnectionString);
         connection.Open();
 
-        var command = connection.CreateCommand();
-        command.CommandText = "DELETE FROM Labs WHERE id = $id;";
-        command.Parameters.AddWithValue("$id", id);
-        command.ExecuteNonQuery();
-
-        connection.Close();
+        connection.Execute("DELETE FROM Labs WHERE id = @Id", new { Id = id });
     }
 
     public Lab Update(Lab lab)
     {
-        var connection = new SqliteConnection(_databaseConfig.ConnectionString);
+        using var connection = new SqliteConnection(_databaseConfig.ConnectionString);
         connection.Open();
 
-        var command = connection.CreateCommand();
-        command.CommandText = "UPDATE Labs SET number = $number, name = $name, block = $block WHERE id = $id;";
-        command.Parameters.AddWithValue("$id", lab.Id);
-        command.Parameters.AddWithValue("$number", lab.Number);
-        command.Parameters.AddWithValue("$name", lab.Name);
-        command.Parameters.AddWithValue("$block", lab.Block);
-        command.ExecuteNonQuery();
-        connection.Close();
-
-        return GetById(lab.Id);
+        connection.Execute("UPDATE Labs SET number = @Number, name = @Name, block = @Block WHERE id = @Id", lab);
+  
+        return this.GetById(lab.Id);
     }
 
     public bool ExistsById(int id) 
     {
-        var connection = new SqliteConnection(_databaseConfig.ConnectionString);
+        using var connection = new SqliteConnection(_databaseConfig.ConnectionString);
         connection.Open();
 
-        var command = connection.CreateCommand();
-        command.CommandText = "SELECT count(id) FROM Lab WHERE id = $id;";
-        command.Parameters.AddWithValue("$id", id);
+        var result = connection.ExecuteScalar<Boolean>("SELECT count(id) FROM Labs WHERE id = @Id", new { Id = id });
 
-        // var reader = command.ExecuteReader();
-        // reader.Read();
-        // var result = reader.GetBoolean(0);
-
-        var result = Convert.ToBoolean(command.ExecuteScalar());
-
-        connection.Close();
         return result;
     }
 
-    private Lab ReaderToLab(SqliteDataReader reader)
-    {
-        return new Lab(reader.GetInt32(0), reader.GetInt32(1), reader.GetString(2),  reader.GetString(3));
-    }
+
 }
