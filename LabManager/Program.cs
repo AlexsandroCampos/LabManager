@@ -1,14 +1,12 @@
-using LabManager.Database;
 using LabManager.Repositories;
 using LabManager.Models;
+using LabManager.Data;
 
-var databaseConfig = new DatabaseConfig();
+var systemContext = new SystemContext();
+systemContext.Database.EnsureCreated();
+var computerRepository = new ComputerRepository(systemContext);
 
-var databaseSetup = new DatabaseSetup(databaseConfig);
-
-var computerRepository = new ComputerRepository(databaseConfig);
-
-var labRepository = new LabRepository(databaseConfig);
+// var labRepository = new LabRepository(systemContext);
 
 // Routing
 var modelName = args[0];
@@ -67,7 +65,7 @@ if (modelName == "Computer")
         var id = Convert.ToInt32(args[2]);
         if(computerRepository.ExistsById(id))
         {
-            var computer = computerRepository.Update(new Computer(Convert.ToInt32(args[2]), args[3], args[4]));
+            var computer = computerRepository.Update(id, new Computer(Convert.ToInt32(args[2]), args[3], args[4]));
             Console.WriteLine($"Updated computer: {computer.Id}, {computer.Ram}, {computer.Processor}");
         }
         else
@@ -78,64 +76,64 @@ if (modelName == "Computer")
 
 }
 
-if (modelName == "Lab")
-{
-    if(modelAction == "List")
-    {
-        foreach (var lab in labRepository.GetAll())
-        {
-            Console.WriteLine($"{ lab.Id}, { lab.Number}, {lab.Name}, {lab.Block}");
-        }
-    }
+// if (modelName == "Lab")
+// {
+//     if(modelAction == "List")
+//     {
+//         foreach (var lab in labRepository.GetAll())
+//         {
+//             Console.WriteLine($"{ lab.Id}, { lab.Number}, {lab.Name}, {lab.Block}");
+//         }
+//     }
 
-    if(modelAction == "New")
-    {
-        labRepository.Save(new Lab(Convert.ToInt32(args[2]), Convert.ToInt32(args[3]), args[4], args[5]));
-    }
+//     if(modelAction == "New")
+//     {
+//         labRepository.Save(new Lab(Convert.ToInt32(args[2]), Convert.ToInt32(args[3]), args[4], args[5]));
+//     }
 
-    if(modelAction == "Delete")
-    {
-        var id = Convert.ToInt32(args[2]);
-        if(labRepository.ExistsById(id))
-        {
-            labRepository.Delete(Convert.ToInt32(args[2]));
-            Console.WriteLine("Completed lab deletion.");
-        }
-        else
-        {
-            Console.WriteLine($"O Lab {id} não existe");
-        }
+//     if(modelAction == "Delete")
+//     {
+//         var id = Convert.ToInt32(args[2]);
+//         if(labRepository.ExistsById(id))
+//         {
+//             labRepository.Delete(Convert.ToInt32(args[2]));
+//             Console.WriteLine("Completed lab deletion.");
+//         }
+//         else
+//         {
+//             Console.WriteLine($"O Lab {id} não existe");
+//         }
        
-    }
+//     }
 
-    if(modelAction == "Show")
-    {
-        var id = Convert.ToInt32(args[2]);
-        if(labRepository.ExistsById(id))
-        {
-            var lab = labRepository.GetById(Convert.ToInt32(args[2]));
-            Console.WriteLine($"{ lab.Id}, { lab.Number}, {lab.Name}, {lab.Block}");
-        }
-        else
-        {
-            Console.WriteLine($"O Lab {id} não existe");
-        }
+//     if(modelAction == "Show")
+//     {
+//         var id = Convert.ToInt32(args[2]);
+//         if(labRepository.ExistsById(id))
+//         {
+//             var lab = labRepository.GetById(Convert.ToInt32(args[2]));
+//             Console.WriteLine($"{ lab.Id}, { lab.Number}, {lab.Name}, {lab.Block}");
+//         }
+//         else
+//         {
+//             Console.WriteLine($"O Lab {id} não existe");
+//         }
         
-    }
+//     }
 
-    if(modelAction == "Update")
-    {
-        var id = Convert.ToInt32(args[2]);
-        if(labRepository.ExistsById(id))
-        {
-            var lab = labRepository.Update(new Lab(Convert.ToInt32(args[2]), Convert.ToInt32(args[3]), args[4], args[5]));
-            Console.WriteLine($"Updated lab: { lab.Id}, { lab.Number}, {lab.Name}, {lab.Block}");
-        }
-        else
-        {
-            Console.WriteLine($"O Lab {id} não existe");
-        }
+//     if(modelAction == "Update")
+//     {
+//         var id = Convert.ToInt32(args[2]);
+//         if(labRepository.ExistsById(id))
+//         {
+//             var lab = labRepository.Update(new Lab(Convert.ToInt32(args[2]), Convert.ToInt32(args[3]), args[4], args[5]));
+//             Console.WriteLine($"Updated lab: { lab.Id}, { lab.Number}, {lab.Name}, {lab.Block}");
+//         }
+//         else
+//         {
+//             Console.WriteLine($"O Lab {id} não existe");
+//         }
         
-    }
-}
+//     }
+// }
 

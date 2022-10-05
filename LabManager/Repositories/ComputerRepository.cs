@@ -28,23 +28,23 @@ class ComputerRepository
         _systemContext.SaveChanges();
     }
 
-    public Computer Update(Computer computer)
+    public Computer Update(int id, Computer computer)
     {
-        using var connection = new SqliteConnection(_databaseConfig.ConnectionString);
-        connection.Open();
-
-        connection.Execute("UPDATE Computers SET ram = @Ram, processor = @Processor WHERE id = @Id", computer);
-  
-        return this.GetById(computer.Id);
+        var computerFound = GetById(id);
+        computerFound.Ram = computer.Ram;
+        computerFound.Processor = computer.Processor;
+        _systemContext.Computers.Update(computerFound);
+        _systemContext.SaveChanges();
+        return computerFound;
     }
 
     public bool ExistsById(int id) 
     {
-        using var connection = new SqliteConnection(_databaseConfig.ConnectionString);
-        connection.Open();
+        if(_systemContext.Computers.Find(id) == null)
+        {
+            return false;
+        }
 
-        var result = connection.ExecuteScalar<Boolean>("SELECT count(id) FROM Computers WHERE id = @Id", new { Id = id });
-
-        return result;
-    }
+        return true;
+    } 
 }

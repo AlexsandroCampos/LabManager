@@ -10,6 +10,6 @@ public class SystemContext : DbContext
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
     {
-        optionsBuilder.UseMySQL("server=localhost;database=estudante;user=estudante;password=estudante;");
+        optionsBuilder.UseMySQL("server=localhost;database=estudante;user=root;password=senha;");
     }
 }
