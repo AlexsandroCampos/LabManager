@@ -1,6 +1,5 @@
-using LabManager.Models;
-
-class Lab
+namespace LabManager.Models;
+public class Lab
 {
     public int Id { get; set; }
     public int Number { get; set; }

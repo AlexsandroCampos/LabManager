@@ -1,52 +1,31 @@
 using LabManager.Models;
-using Microsoft.Data.Sqlite;
-using LabManager.Database;
-using Dapper;
+using LabManager.Data;
 
 namespace LabManager.Repositories;
 
 class ComputerRepository
 {
-    private readonly DatabaseConfig _databaseConfig;
+    private SystemContext _systemContext;
 
-    public ComputerRepository(DatabaseConfig databaseConfig)
+    public ComputerRepository(SystemContext systemContext)
     {
-        _databaseConfig = databaseConfig;
+        _systemContext = systemContext;
     }
-    public List<Computer> GetAll() 
-    {
-        using var connection = new SqliteConnection(_databaseConfig.ConnectionString);
-        connection.Open();
-
-        var computers = connection.Query<Computer>("SELECT * FROM Computers").ToList();
-
-        return computers;
-    }
+    public List<Computer> GetAll() => _systemContext.Computers.ToList();
 
     public void Save(Computer computer)
     {
-        using var connection = new SqliteConnection(_databaseConfig.ConnectionString);
-        connection.Open();
-
-        connection.Execute("INSERT INTO Computers VALUES(@Id, @Ram, @Processor)", computer);
+        _systemContext.Computers.Add(computer);
+        _systemContext.SaveChanges();
     }
 
-    public Computer GetById(int id)
-    {
-        using var connection = new SqliteConnection(_databaseConfig.ConnectionString);
-        connection.Open();
-
-        var computer = connection.QuerySingle<Computer>("SELECT * FROM Computers WHERE id = @Id;", new{ Id = id });
-
-        return computer;
-    }
+    public Computer GetById(int id) => _systemContext.Computers.Find(id);
 
     public void Delete(int id)
     {
-        using var connection = new SqliteConnection(_databaseConfig.ConnectionString);
-        connection.Open();
-
-        connection.Execute("DELETE FROM Computers WHERE id = @Id", new { Id = id });
+        var computer = GetById(id);
+        _systemContext.Computers.Remove(computer);
+        _systemContext.SaveChanges();
     }
 
     public Computer Update(Computer computer)

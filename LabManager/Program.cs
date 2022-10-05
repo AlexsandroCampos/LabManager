@@ -1,4 +1,3 @@
-using Microsoft.Data.Sqlite;
 using LabManager.Database;
 using LabManager.Repositories;
 using LabManager.Models;
