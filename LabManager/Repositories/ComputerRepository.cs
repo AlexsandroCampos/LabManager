@@ -3,7 +3,7 @@ using LabManager.Data;
 
 namespace LabManager.Repositories;
 
-class ComputerRepository
+public class ComputerRepository
 {
     private SystemContext _systemContext;
 
@@ -28,9 +28,9 @@ class ComputerRepository
         _systemContext.SaveChanges();
     }
 
-    public Computer Update(int id, Computer computer)
+    public Computer Update(Computer computer)
     {
-        var computerFound = GetById(id);
+        var computerFound = GetById(computer.Id);
         computerFound.Ram = computer.Ram;
         computerFound.Processor = computer.Processor;
         _systemContext.Computers.Update(computerFound);
